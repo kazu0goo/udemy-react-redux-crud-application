@@ -1,67 +1,43 @@
-//import React, { Component } from 'react';
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
 
+const App = () => <Counter />;
 
-// class App extends Component {
-//   render() {
-//     return(
-//       <React.Fragment>
-//         <label htmlFor="bar">bar</label>
-//         <input type="text" onChange={()=>{console.log("WOOO! I'm changed!")}}></input>
-//       </React.Fragment>
-//     );
-//   }
-// }
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    console.log(this.state);
+    this.state = { count: 0 };
+  }
+  handlePlusButton = () => {
+    console.log('handlePlusButton')
+    console.log(this.state.count)
+    // const currentCount = this.state.count;
+    // this.setState({count:currentCount+1})
+    this.setState({count:this.state.count+1})
 
-const App = () => {
-  const profiles = [
-    {
-      name:"4",
-      age:4
+  }
+  handleMinusButton = () => {
+    console.log('handleMinusButton')
+    console.log(this.state.count)
+    // const currentCount = this.state.count;
+    // this.setState({count:currentCount+1})
+    this.setState({count:this.state.count-1})
 
-    },
-    {
-      name:"3",
-      age:3
-    },
-    {
-      name:"Jiro",
-      age:33
-    },
-    {
-      name:"Taro",
-      age:11
-    },
-    {
-      name:"Hanako",
-      age:6
-    }
-  ]
-  return (
-    <div>
-      {
-        profiles.map((profile,index)=>{
-          return  <User name={profile.name} age={profile.age} key={index}/>
-        })
-      }
-    </div>
-  )
-  // return <div>
-  //   <User name={"Taro"} age={10}/>
-  //   <User name={"Hanako"} age={5}/>
-  // </div>
+  }
+  render() {
+//    console.log(this.state);
+    console.log("render");
+    return (
+      <React.Fragment>
+        <div>
+          count:
+          {this.state.count}
+        </div>
+        <button onClick={this.handlePlusButton}>+1</button>
+        <button onClick={this.handleMinusButton}>-1</button>
+      </React.Fragment>
+    );
+  }
 }
 
-const User = (props) => {
-  return <div>I am {props.name},age is {props.age}.</div>
-}
-
-User.propTypes = {
-  name:PropTypes.string,
-  age:PropTypes.number.isRequired
-}
-// User.defaultProps = {
-//   age:1
-// }
 export default App;
