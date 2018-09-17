@@ -1,14 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 //import _ from "lodash";
-import { postEvent } from "../actions";
+import { getEvent, deleteEvent, putEvent } from "../actions";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 
-class EventsNew extends Component {
+class EventsShow extends Component {
   constructor(props) {
+    console.log("EventsShow");
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    if (id) this.props.getEvent;
   }
 
   renderField(field) {
@@ -26,8 +33,16 @@ class EventsNew extends Component {
     );
   }
 
+  async onDeleteClick() {
+    //console.log(this.props.match);
+    const { id } = this.props.match.params;
+    console.log(id);
+    await this.props.deleteEvent(id);
+    this.props.history.push("/");
+  }
+
   async onSubmit(values) {
-    await this.props.postEvent(values);
+    await this.props.putEvent(values);
     this.props.history.push("/");
   }
 
@@ -60,14 +75,20 @@ class EventsNew extends Component {
           />
         </div>
         <Link to="/">Cancel</Link>
+        <Link to="/" onClick={this.onDeleteClick}>
+          Delete
+        </Link>
       </form>
     );
   }
 }
 
-//const mapStateToProps = state => ({ events: state.events });
+const mapDispatchToProps = { deleteEvent, getEvent, putEvent };
 
-const mapDispatchToProps = { postEvent };
+const mapStateToProps = (state, ownProps) => {
+  const event = state.events[ownProps.match.params.id];
+  return { initialValues: event, state };
+};
 
 const validate = values => {
   const errors = {};
@@ -77,6 +98,10 @@ const validate = values => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(reduxForm({ validate, form: "eventNewForm" })(EventsNew));
+)(
+  reduxForm({ validate, form: "eventShowForm", enableReinitialize: true })(
+    EventsShow
+  )
+);
